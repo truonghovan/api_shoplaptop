@@ -7,14 +7,7 @@
         "node": "14.x"
     },
     "scripts": {
-        "format:check": "prettier --check .",
-        "format:write": "prettier --write .",
-        "lint:check": "eslint .",
-        "lint:fix": "eslint --fix .",
-        "beautiful": "lint-staged",
         "start": "node src/index.js",
-        "watch": "node-sass --watch src/resources/scss/ --output src/public/css/",
-        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
         "type": "git",
