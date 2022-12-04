@@ -3,6 +3,9 @@
     "version": "1.0.0",
     "description": "",
     "main": "src/index.js",
+    "engnies": {
+        "node": "14.x"
+    },
     "scripts": {
         "format:check": "prettier --check .",
         "format:write": "prettier --write .",
