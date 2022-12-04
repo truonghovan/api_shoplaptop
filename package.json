@@ -12,7 +12,7 @@
         "lint:check": "eslint .",
         "lint:fix": "eslint --fix .",
         "beautiful": "lint-staged",
-        "start": "nodemon --inspect src/index.js",
+        "start": "node src/index.js",
         "watch": "node-sass --watch src/resources/scss/ --output src/public/css/",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
