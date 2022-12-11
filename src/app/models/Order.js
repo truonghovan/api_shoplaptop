@@ -13,9 +13,33 @@ const orderSchema = new mongoose.Schema(
             type: String,
         },
         addressId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'UserAddress',
-            required: true,
+            name: {
+                type: String,
+            },
+            address: {
+                type: String,
+            },
+            mobileNumber: {
+                type: String,
+            },
+            provinceName: {
+                type: String,
+            },
+            provinceID: {
+                type: String,
+            },
+            districtName: {
+                type: String,
+            },
+            districtID: {
+                type: String,
+            },
+            wardID: {
+                type: String,
+            },
+            wardName: {
+                type: String,
+            },
         },
         totalAmount: {
             type: Number,
@@ -34,6 +58,9 @@ const orderSchema = new mongoose.Schema(
                 purchasedQty: {
                     type: Number,
                     required: true,
+                },
+                price: {
+                    type: String,
                 },
             },
         ],

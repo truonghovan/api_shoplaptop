@@ -6,7 +6,7 @@ const multer = require('multer')
 const shortid = require('shortid')
 const path = require('path')
 const Product = require('../app/models/Product')
-const { requireSignin, adminMiddleware } = require('../middleware')
+const { requireSignin } = require('../middleware')
 
 const storage = multer.diskStorage({
     destination(req, file, cb) {
