@@ -57,7 +57,6 @@ exports.initialData = async (req, res) => {
             lean: true,
             populate: [
                 { path: 'items.productId' },
-                { path: 'addressObject' },
                 { path: 'userObject' },
             ],
         }
