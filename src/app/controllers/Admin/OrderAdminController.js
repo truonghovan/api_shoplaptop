@@ -98,7 +98,6 @@ class OrderAdminController {
     async getAllOrders(req, res, next) {
         try {
             const allOrders = await Order.find({}).populate(
-                { path: 'addressObject' },
                 { path: 'userObject' }
             )
             if (allOrders) {
@@ -296,9 +295,6 @@ class OrderAdminController {
                 populate: [
                     {
                         path: 'userObject',
-                    },
-                    {
-                        path: 'addressObject',
                     },
                     { path: 'items.productId' },
                 ],
