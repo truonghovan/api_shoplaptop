@@ -111,15 +111,13 @@ class OrderController {
             }
             Order.findOne(query)
                 .populate(
-                    'items.productId',
-                    '_id name productPicture salePrice'
+                    'items.productId'
                 )
                 .lean()
                 .exec((error, order) => {
-                    console.log(error)
                     if (error) return res.status(400).json({ error })
                     if (order) {
-                       
+                            console.log(order)
                             res.status(200).json({
                                 order
                           
