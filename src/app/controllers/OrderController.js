@@ -116,11 +116,9 @@ class OrderController {
                 .populate(
                     'items.productId'
                 )
-                .lean()
                 .exec((error, order) => {
                     if (error) return res.status(400).json({ error })
                     if (order) {
-                            console.log(order)
                             res.status(200).json({
                                 order
                           
