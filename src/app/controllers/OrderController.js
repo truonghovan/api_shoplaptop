@@ -88,7 +88,6 @@ class OrderController {
         try {
             Order.find({ user: req.user.id })
                 .populate(
-                    { path: 'category', select: '_id name' },
                     { path: 'user', select: '_id firstname lastname' }
                 )
                 .exec((error, orders) => {
