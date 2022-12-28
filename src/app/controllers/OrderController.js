@@ -88,7 +88,7 @@ class OrderController {
         try {
             Order.find({ user: req.user.id })
                 .populate(
-                    { path: 'user', select: '_id firstname lastname' }
+                   'user' 
                 )
                 .exec((error, orders) => {
                     if (error) return res.status(400).json({ error })
