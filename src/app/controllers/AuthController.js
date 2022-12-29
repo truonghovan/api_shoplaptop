@@ -141,6 +141,7 @@ class UserController {
                     firstName,
                     lastName,
                     email,
+                    role: '63604156b949802220aa04c9',
                     hash_password,
                     userName,
                 })
@@ -236,12 +237,14 @@ class UserController {
 
     async googleLogin(req, res) {
         try {
+            console.log(req.body)
+            return
             const { tokenId } = req.body
 
-            const verify = await client.verifyIdToken({
-                idToken: tokenId,
-                audience: process.env.MAILING_SERVICE_CLIENT_ID,
-            })
+            // const verify = await client.verifyIdToken({
+            //     idToken: tokenId,
+            //     audience: process.env.MAILING_SERVICE_CLIENT_ID,
+            // })
 
             const { email_verified, email, given_name, family_name } =
                 verify.payload
@@ -277,6 +280,7 @@ class UserController {
                     firstName: given_name,
                     lastName: family_name,
                     email,
+                    role: '63604156b949802220aa04c9',
                     hash_password: passwordHash,
                     userName: shortid.generate(),
                 })
@@ -293,6 +297,7 @@ class UserController {
                 res.json({ msg: 'Login success!', token: refresh_token })
             }
         } catch (err) {
+            console.log(err)
             return res.status(500).json({ msg: err.message })
         }
     }
@@ -327,7 +332,7 @@ class UserController {
 
                 const refresh_token = createRefreshToken({
                     id: user._id,
-                    role: user.role,
+                    role: user?.role,
                 })
 
                 res.json({ msg: 'Login success!', token: refresh_token })
@@ -336,6 +341,7 @@ class UserController {
                     firstName: name.split(' ')[0],
                     lastName: name.split(' ')[1] + name.split(' ')[2],
                     email,
+                    role: '63604156b949802220aa04c9',
                     hash_password: passwordHash,
                     userName: shortid.generate(),
                 })
@@ -355,6 +361,7 @@ class UserController {
                 res.json({ msg: 'Login success!', token: refresh_token })
             }
         } catch (err) {
+            console.log(err)
             return res.status(500).json({ msg: err.message })
         }
     }

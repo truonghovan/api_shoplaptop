@@ -1,11 +1,13 @@
 const Order = require('../models/Order')
 const Cart = require('../models/Cart')
+const Product = require('../models/Product')
 const shortid = require('shortid')
 const slugify = require('slugify')
 const Address = require('../models/Address')
 const { isValidObjectId } = require('mongoose')
+const User = require('../models/User')
+const sendEmailOrder = require('./SendmailOrderController')
 var ObjectId = require('mongodb').ObjectId
-
 class OrderController {
     create(req, res, next) {
         try {
@@ -69,11 +71,38 @@ class OrderController {
                             isCompleted: false,
                         },
                     ]
+                    console.log(req.body.items)
+
                     const order = new Order(req.body)
                     order.user = req.user.id
-                    order.save((error, order) => {
+                    order.save(async (error, order) => {
                         if (error) return res.status(400).json({ error })
                         if (order) {
+                            const user = await User.findOne({
+                                _id: req.user.id,
+                            })
+                            const updateListProduct = req.body.items?.map(
+                                async (item) => {
+                                    const product = await Product.findById(
+                                        item.productId
+                                    )
+                                    const total =
+                                        parseInt(product.quantitySold) +
+                                        parseInt(item.purchasedQty)
+                                    await Product.updateOne(
+                                        { _id: item.productId },
+                                        { quantitySold: total }
+                                    )
+                                }
+                            )
+                            await Promise.all(updateListProduct)
+                            sendEmailOrder(
+                                user?.email,
+                                `https://laptopshopv1.netlify.app/order_details/${order?._id}`,
+                                'Đặt hàng thành công!',
+                                user.lastName,
+                                order?._id
+                            )
                             res.status(201).json({ order })
                         }
                     })
@@ -87,12 +116,8 @@ class OrderController {
     getOrders = (req, res) => {
         try {
             Order.find({ user: req.user.id })
-                .populate(
-                   'user' 
-                )
-                .populate(
-                    'items.productId'
-                )
+                .populate('user')
+                .populate('items.productId')
                 .exec((error, orders) => {
                     if (error) return res.status(400).json({ error })
                     if (orders) {
@@ -113,15 +138,12 @@ class OrderController {
                 query = { id: req.body.orderId }
             }
             Order.findOne(query)
-                .populate(
-                    'items.productId'
-                )
+                .populate('items.productId')
                 .exec((error, order) => {
                     if (error) return res.status(400).json({ error })
                     if (order) {
-                            res.status(200).json({
-                                order
-                          
+                        res.status(200).json({
+                            order,
                         })
                     }
                 })

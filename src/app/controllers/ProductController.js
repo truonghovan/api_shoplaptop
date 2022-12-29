@@ -10,6 +10,7 @@ const encodeBase64 = (data) => {
     return Buffer.from(data).toString('base64')
 }
 const NodeCache = require('node-cache')
+const User = require('../models/User')
 const myCache = new NodeCache({ stdTTL: 100, checkperiod: 120 })
 var cloudinary = require('cloudinary').v2
 cloudinary.config({
@@ -460,6 +461,19 @@ class ProductController {
             Promise.all(productPicture).then((result) => {
                 res.json({ result })
             })
+        } catch (err) {
+            res.status(400).json({ err })
+        }
+    }
+    uploadAvatar = async (req, res, next) => {
+        try {
+            const fileStr = req.body.data
+            const uploadResponse = await cloudinary.uploader.upload(fileStr)
+            const update = await User.findOneAndUpdate(
+                { _id: req.user.id },
+                { profilePicture: uploadResponse.url }
+            )
+            res.json({ update })
         } catch (err) {
             res.status(400).json({ err })
         }
