@@ -237,14 +237,12 @@ class UserController {
 
     async googleLogin(req, res) {
         try {
-            console.log(req.body)
-            return
             const { tokenId } = req.body
 
-            // const verify = await client.verifyIdToken({
-            //     idToken: tokenId,
-            //     audience: process.env.MAILING_SERVICE_CLIENT_ID,
-            // })
+            const verify = await client.verifyIdToken({
+                idToken: tokenId,
+                audience: process.env.MAILING_SERVICE_CLIENT_ID,
+            })
 
             const { email_verified, email, given_name, family_name } =
                 verify.payload
