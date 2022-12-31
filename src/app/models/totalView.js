@@ -5,12 +5,11 @@ const totalViewSchema = new mongoose.Schema(
         view: {
             type: Number,
             required: true,
-            unique: true
         },
         createdTime: {
             type: Date,
-            default: Date.now()
-        }
+            default: Date.now(),
+        },
     },
     { collection: 'totalView' },
     { timestamps: true }
