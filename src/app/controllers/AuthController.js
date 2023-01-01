@@ -116,7 +116,7 @@ class UserController {
 
         const updateProfile = User.findOneAndUpdate(
             { _id: userId },
-            { $set: { email } },
+            { $set: { email, upadteTime: Date.now() } },
             { new: true }
         ).exec((error, result) => {
             if (error) return res.status(400).json({ error })
@@ -144,6 +144,7 @@ class UserController {
                     role: '63604156b949802220aa04c9',
                     hash_password,
                     userName,
+                    createdTime: Date.now(),
                 })
                 _user.save((error, user) => {
                     if (error) {
@@ -226,6 +227,7 @@ class UserController {
                 { _id: req.user.id },
                 {
                     hash_password: passwordHash,
+                    updatedTime: Date.now(),
                 }
             ).exec()
 
@@ -281,6 +283,7 @@ class UserController {
                     role: '63604156b949802220aa04c9',
                     hash_password: passwordHash,
                     userName: shortid.generate(),
+                    createdTime: Date.now(),
                 })
 
                 await newUser.save()
@@ -342,6 +345,7 @@ class UserController {
                     role: '63604156b949802220aa04c9',
                     hash_password: passwordHash,
                     userName: shortid.generate(),
+                    createdTime: Date.now(),
                 })
 
                 await newUser.save()

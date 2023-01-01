@@ -23,6 +23,13 @@ const bannerSchema = new mongoose.Schema(
             ref: 'User',
             required: true,
         },
+        createdTime: {
+            type: Date,
+            default: Date.now,
+        },
+        updatedTime: {
+            type: Date,
+        },
     },
     { collection: 'Banner' },
     { timestamps: true }

@@ -33,6 +33,7 @@ class OrderController {
                 paymentType: req.body.paymentType,
                 user: req.body.user,
                 orderStatus: orderStatusTable,
+                createdTime: Date.now(),
             })
 
             order.save((error, order) => {
@@ -71,8 +72,10 @@ class OrderController {
                             isCompleted: false,
                         },
                     ]
-                    console.log(req.body.items)
-
+                    if (req.body?.paymentType == 'card') {
+                        req.body?.paymentStatus === 'completed'
+                    }
+                    req.body.createdTime = Date.now()
                     const order = new Order(req.body)
                     order.user = req.user.id
                     order.save(async (error, order) => {
@@ -89,6 +92,9 @@ class OrderController {
                                     const total =
                                         parseInt(product.quantitySold) +
                                         parseInt(item.purchasedQty)
+                                    if (total > product?.quantity) {
+                                        throw new Error('Error quantity')
+                                    }
                                     await Product.updateOne(
                                         { _id: item.productId },
                                         { quantitySold: total }
@@ -118,6 +124,7 @@ class OrderController {
             Order.find({ user: req.user.id })
                 .populate('user')
                 .populate('items.productId')
+                .sort({ createdTime: -1 })
                 .exec((error, orders) => {
                     if (error) return res.status(400).json({ error })
                     if (orders) {
@@ -155,11 +162,31 @@ class OrderController {
         try {
             Order.findOneAndUpdate(
                 { _id: req.body.data.payload.orderId },
-                { $set: { paymentStatus: 'cancelled' } },
+                {
+                    $set: {
+                        paymentStatus: 'cancelled',
+                        updatedTime: Date.now(),
+                    },
+                },
                 { new: true, upsert: true }
-            ).exec((error, result) => {
+            ).exec(async (error, result) => {
                 if (error) return res.status(400).json({ error })
                 if (result) {
+                    const updateListProduct = result?.items?.map(
+                        async (item) => {
+                            const product = await Product.findById(
+                                item.productId
+                            )
+                            const total =
+                                parseInt(product.quantitySold) -
+                                parseInt(item.purchasedQty)
+                            await Product.updateOne(
+                                { _id: item.productId },
+                                { quantitySold: total }
+                            )
+                        }
+                    )
+                    await Promise.all(updateListProduct)
                     res.status(202).json({ result })
                 }
             })
@@ -242,7 +269,7 @@ class OrderController {
     updateCompletedOrder = (req, res) => {
         Order.findOneAndUpdate(
             { _id: req.body.data.payload.orderId },
-            { $set: { paymentStatus: 'completed' } },
+            { $set: { paymentStatus: 'completed', updatedTime: Date.now() } },
             { new: true, upsert: true }
         ).exec((error, result) => {
             if (error) return res.status(400).json({ error })

@@ -37,6 +37,7 @@ class CategoryController {
                     name: req.body.name,
                     slug: `${slugify(req.body.name)}-${shortid.generate()}`,
                     categoryImage: req.body.categoryImage,
+                    createdTime: Date.now(),
                 }
                 if (req.file) {
                     categoryObject.categoryImage = `/uploads/${req.file.filename}`
@@ -83,7 +84,6 @@ class CategoryController {
                     const tempSlug = `${slugify(
                         req.body.nameCategory
                     )}-${shortid.generate()}`
-                    console.log(tempSlug)
                     Category.updateOne(
                         {
                             _id: req.body._id,
@@ -93,6 +93,7 @@ class CategoryController {
                                 name: req.body.nameCategory,
                                 slug: tempSlug,
                                 categoryImage: req.body.categoryImage,
+                                updatedTime: Date.now(),
                             },
                         }
                     ).exec((error, category) => {

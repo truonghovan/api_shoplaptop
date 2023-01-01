@@ -19,6 +19,7 @@ class BannerController {
                 image,
                 slug,
                 createdBy: req.user.id,
+                createdTime: Date.now(),
             })
             // eslint-disable-next-line consistent-return
             banner.save((error, banner) => {
@@ -67,6 +68,7 @@ class BannerController {
                         codeBanner: req.body.codeBanner,
                         image: req.body.image,
                         slug: req.body.slug,
+                        updatedTime: Date.now(),
                     },
                 },
                 { new: true, upsert: true }

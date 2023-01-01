@@ -1,4 +1,6 @@
+const { Error, MongooseError } = require('mongoose')
 const Cart = require('../models/Cart')
+const Product = require('../models/Product')
 function runUpdate(condition, updateData) {
     return new Promise((resolve, reject) => {
         //you update code here
@@ -12,14 +14,23 @@ function runUpdate(condition, updateData) {
 class CartController {
     addItemToCart = (req, res) => {
         try {
-            Cart.findOne({ user: req.user.id }).exec((error, cart) => {
+            Cart.findOne({ user: req.user.id }).exec(async (error, cart) => {
                 if (error) return res.status(400).json({ error })
                 if (cart) {
                     //if cart already exists then update cart by quantity
                     let promiseArray = []
-
-                    req.body.cartItems.forEach((cartItem) => {
+                    let error = 0
+                    await req.body.cartItems.forEach(async (cartItem) => {
                         const product = cartItem.product
+                        const checkProduct = await Product.findById(product)
+                        if (
+                            parseInt(checkProduct.quantity) -
+                                parseInt(checkProduct.quantitySold) <
+                            parseInt(cartItem.quantity)
+                        ) {
+                            error = 1
+                            return
+                        }
                         const item = cart.cartItems.find(
                             (c) => c.product == product
                         )
@@ -44,9 +55,15 @@ class CartController {
                         }
                         promiseArray.push(runUpdate(condition, update))
                     })
-                    Promise.all(promiseArray)
-                        .then((response) => res.status(201).json({ response }))
-                        .catch((error) => res.status(400).json({ error }))
+                    if (error === 0) {
+                        await Promise.all(promiseArray)
+                            .then((response) =>
+                                res.status(201).json({ response })
+                            )
+                            .catch((error) => res.status(400).json({ error }))
+                    } else {
+                        return res.status(400).json({ error: 'error' })
+                    }
                 } else {
                     //if cart not exist then create a new cart
                     const cart = new Cart({
@@ -68,12 +85,8 @@ class CartController {
     getCartItems = (req, res) => {
         try {
             Cart.findOne({ user: req.user.id })
-                .populate(
-                    'cartItems.product',
-                    '_id name salePrice regularPrice productPicture'
-                )
+                .populate('cartItems.product')
                 .exec((error, cart) => {
-                    console.log(cart)
                     if (error) return res.status(400).json({ error })
                     if (cart === null) res.status(200).json({ cartItems: [] })
                     if (cart) {

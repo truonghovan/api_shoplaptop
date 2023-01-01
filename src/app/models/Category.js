@@ -23,6 +23,13 @@ const categorySchema = new mongoose.Schema(
         parentId: {
             type: String,
         },
+        createdTime: {
+            type: Date,
+            default: Date.now,
+        },
+        updatedTime: {
+            type: Date,
+        },
     },
     { collection: 'Category' },
     { timestamps: true }

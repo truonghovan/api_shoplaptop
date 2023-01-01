@@ -156,7 +156,16 @@ class AuthController {
                 async (error, user) => {
                     if (error) return res.status(400).json({ error })
                     if (user) {
-                        const isPassword = user.authenticate(req.body.password)
+                        console.log(req.body.password)
+                        const validPassword = await bcrypt.compare(
+                            req.body.password,
+                            user.hash_password
+                        )
+                        if (!validPassword) {
+                            return res.status(400).json({
+                                message: 'Invalid Password',
+                            })
+                        }
                         let testRole = await Role.find({ _id: user.role })
 
                         let listAction = await RoleAction.findOne({
@@ -174,7 +183,7 @@ class AuthController {
                             rolescreen.push({ screenSlug: e.screenSlug })
                         )
                         if (
-                            isPassword &&
+                            validPassword &&
                             testRole[0].nameRole !== 'Khách hàng'
                         ) {
                             const refresh_token = createRefreshToken({

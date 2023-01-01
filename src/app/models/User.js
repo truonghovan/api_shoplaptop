@@ -42,7 +42,6 @@ const userSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Role',
             required: true,
-            
         },
         contactNumber: {
             type: String,
@@ -53,6 +52,13 @@ const userSchema = new mongoose.Schema(
         status: {
             type: String,
             default: 'enable',
+        },
+        createdTime: {
+            type: Date,
+            default: Date.now,
+        },
+        updatedTime: {
+            type: Date,
         },
     },
     { collection: 'User' },

@@ -20,7 +20,10 @@ const server = require('http').createServer(app)
 const { Server } = require('socket.io')
 const io = new Server(server, {
     cors: {
-        origin: ['https://laptopshopv1.netlify.app', 'https://adminshoplaptop.netlify.app'],
+        origin: [
+            'https://laptopshopv1.netlify.app',
+            'https://adminshoplaptop.netlify.app',
+        ],
     },
 })
 io.on('connection', (socket) => {
@@ -52,7 +55,16 @@ app.use('/public', express.static(path.join(__dirname, 'uploads')))
 // HTTP Logger
 app.use(morgan('combined'))
 app.use(methodOverride('_method'))
-app.use(cors())
+app.use(
+    cors({
+        origin: [
+            'https://laptopshopv1.netlify.app',
+            'https://adminshoplaptop.netlify.app',
+            'http://localhost:3000',
+            'http://localhost:3002',
+        ],
+    })
+)
 
 // template engine
 

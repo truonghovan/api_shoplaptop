@@ -32,66 +32,66 @@ const productSchema = new mongoose.Schema(
                 Series: { type: String },
                 color: [
                     {
-                        colorId : {
+                        colorId: {
                             type: mongoose.Schema.Types.ObjectId,
                             ref: 'infoProduct',
                             required: true,
                         },
                         name: {
-                            type: String
+                            type: String,
                         },
                         type: {
-                            type: String
-                        }
-                    }
+                            type: String,
+                        },
+                    },
                 ],
                 cpu: [
                     {
-                        cpuId : {
+                        cpuId: {
                             type: mongoose.Schema.Types.ObjectId,
                             ref: 'infoProduct',
                             required: true,
                         },
                         name: {
-                            type: String
+                            type: String,
                         },
                         type: {
-                            type: String
-                        }
-                    }
+                            type: String,
+                        },
+                    },
                 ],
                 cardDohoa: {
                     type: String,
                 },
                 ram: [
                     {
-                        ramId : {
+                        ramId: {
                             type: mongoose.Schema.Types.ObjectId,
                             ref: 'infoProduct',
                             required: true,
                         },
                         name: {
-                            type: String
+                            type: String,
                         },
                         type: {
-                            type: String
-                        }
-                    }
+                            type: String,
+                        },
+                    },
                 ],
                 manhinh: [
                     {
-                        screenId : {
+                        screenId: {
                             type: mongoose.Schema.Types.ObjectId,
                             ref: 'infoProduct',
                             required: true,
                         },
                         name: {
-                            type: String
+                            type: String,
                         },
                         type: {
-                            type: String
-                        }
-                    }
+                            type: String,
+                        },
+                    },
                 ],
                 ocung: {
                     type: String,
@@ -116,11 +116,13 @@ const productSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
-        tag: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Tag',
-            required: true,
-        }],
+        tag: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Tag',
+                required: true,
+            },
+        ],
         offer: {
             type: Number,
         },
@@ -140,6 +142,13 @@ const productSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true,
+        },
+        createdTime: {
+            type: Date,
+            default: Date.now,
+        },
+        updatedTime: {
+            type: Date,
         },
         updateAt: Date,
     },

@@ -13,8 +13,11 @@ const roleSchema = new mongoose.Schema(
         },
         createdTime: {
             type: Date,
-            default: Date.now()
-        },    
+            default: Date.now,
+        },
+        updatedTime: {
+            type: Date,
+        },
         createdBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',

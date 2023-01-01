@@ -47,6 +47,13 @@ const addressSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
+    createdTime: {
+        type: Date,
+        default: Date.now,
+    },
+    updatedTime: {
+        type: Date,
+    },
 })
 
 // B

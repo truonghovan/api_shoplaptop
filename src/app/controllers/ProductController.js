@@ -187,6 +187,7 @@ class ProductController {
                     tag: req.body.listTag,
                     category: req.body.categoryId,
                     createdBy: req.user.id,
+                    createdTime: Date.now(),
                 })
                 product.save((error, product) => {
                     if (error) return res.status(400).json({ error })
@@ -284,6 +285,7 @@ class ProductController {
                             description: req.body.description,
                             descriptionTable: descriptionTable,
                             category: req.body.categoryId,
+                            updatedTime: Date.now(),
                         },
                     }
                 ).exec((error, product) => {
@@ -307,7 +309,6 @@ class ProductController {
             })
                 .populate({ path: 'tag' })
                 .populate({ path: 'category', select: '_id name' })
-                .select('-description')
                 .exec()
             console.log(products)
             return res.status(200).json({ products })
@@ -444,7 +445,6 @@ class ProductController {
             const products = await Product.find({})
                 .populate({ path: 'tag' })
                 .populate({ path: 'category', select: '_id name' })
-                .select('-description')
                 .exec()
             res.status(200).json({ products })
         } catch (error) {
@@ -559,7 +559,6 @@ class ProductController {
                         select: '_id name',
                     },
                 ],
-                select: '-description',
             }
             console.log(req.body)
             const searchModel = req.body
