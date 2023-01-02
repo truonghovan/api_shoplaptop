@@ -145,7 +145,7 @@ const productSchema = new mongoose.Schema(
         },
         createdTime: {
             type: Date,
-            default: Date.now,
+            default: Date.now(),
         },
         updatedTime: {
             type: Date,
