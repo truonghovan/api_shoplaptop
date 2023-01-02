@@ -4,7 +4,6 @@ const totalViewSchema = new mongoose.Schema(
     {
         view: {
             type: Number,
-            required: true,
         },
         createdTime: {
             type: Date,
